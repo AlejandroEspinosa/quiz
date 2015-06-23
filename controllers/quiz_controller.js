@@ -17,9 +17,14 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res) {
-	models.Quiz.findAll().then(
-		function(quizes) {
-			res.render('quizes/index', {quizes: quizes});
+	var patron = req.query.search || '';
+	patron = (patron !== '') ? '%' + patron.replace(/ /g, '%') + '%' : '%'; // Pone % al principio y al final, y reemplaza los espacios por %
+	models.Quiz.findAll({where: ["pregunta like ?", patron]}).then(
+			function(quizes) {
+			res.render('quizes/index', {quizes: 
+				// Si se introdujo cadena de búsqueda entonces ordena quizes alfabéticamente:
+				(patron === '%') ? quizes : quizes.sort(function(a,b){ return a.pregunta.toLowerCase().localeCompare(b.pregunta.toLowerCase()); })
+			});
 		}
 	).catch(function(error) { next(error);});
 };
