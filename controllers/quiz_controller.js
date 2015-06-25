@@ -45,6 +45,23 @@ exports.answer = function(req, res) {
 	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 };
 
+// GET /quizes/new
+exports.new = function(req, res) {
+	var quiz = models.Quiz.build( // Crea un objeto quiz
+		{pregunta: "", respuesta: ""}
+	);
+	res.render('quizes/new', {quiz: quiz});
+};
+
+// POST /quizes/create
+exports.create = function(req, res) {
+	var quiz = models.Quiz.build(req.body.quiz);
+	// Guarda en BDD sólo campos pregunta y respuesta, evitando abusos:
+	quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+		res.redirect('/quizes');
+	})
+};
+
 // GET /author
 exports.author = function(req, res) {
 	res.render('author');
