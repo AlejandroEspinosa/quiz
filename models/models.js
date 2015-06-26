@@ -37,7 +37,7 @@ exports.Quiz = Quiz;
 sequelize.sync().then(function() { //cambiamos success por then al actualizar sequelize
 	Quiz.count().then(function(count) {
 		if (count === 0) {
-			Quiz.create({ pregunta: 'Capital de QItalia',
+			Quiz.create({ pregunta: 'Capital de Italia',
 						  respuesta: 'Roma'
 			});
 			Quiz.create({ pregunta: 'Capital de Portugal',
