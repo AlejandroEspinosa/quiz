@@ -34,8 +34,8 @@ var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 exports.Quiz = Quiz;
 
 // sequelize.sync() sincroniza si existe o crea la tabla
-sequelize.sync().success(function() {
-	Quiz.count().success(function(count) {
+sequelize.sync().then(function() { //cambiamos success por then al actualizar sequelize
+	Quiz.count().then(function(count) {
 		if (count === 0) {
 			Quiz.create({ pregunta: 'Capital de QItalia',
 						  respuesta: 'Roma'

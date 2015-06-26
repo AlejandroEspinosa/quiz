@@ -21,9 +21,10 @@ exports.index = function(req, res) {
 	patron = (patron !== '') ? '%' + patron.replace(/ /g, '%') + '%' : '%'; // Pone % al principio y al final, y reemplaza los espacios por %
 	models.Quiz.findAll({where: ["pregunta like ?", patron]}).then(
 			function(quizes) {
-			res.render('quizes/index', {quizes: 
+			res.render('quizes/index', {
 				// Si se introdujo cadena de búsqueda entonces ordena quizes alfabéticamente:
-				(patron === '%') ? quizes : quizes.sort(function(a,b){ return a.pregunta.toLowerCase().localeCompare(b.pregunta.toLowerCase()); })
+				quizes: (patron === '%') ? quizes : quizes.sort(function(a,b){ return a.pregunta.toLowerCase().localeCompare(b.pregunta.toLowerCase()); }),
+				errors: []
 			});
 		}
 	).catch(function(error) { next(error);});
@@ -32,7 +33,7 @@ exports.index = function(req, res) {
 // GET /quizes/:id
 exports.show = function(req, res) {
 	models.Quiz.find(req.params.quizId).then(function(quiz) {
-		res.render('quizes/show', {quiz: req.quiz});
+		res.render('quizes/show', {quiz: req.quiz, errors: [] });
 	})
 };
 
@@ -42,7 +43,7 @@ exports.answer = function(req, res) {
 	if (req.query.respuesta === req.quiz.respuesta) {
 		resultado = 'Correcto';
 	}
-	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
+	res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: [] });
 };
 
 // GET /quizes/new
@@ -50,16 +51,27 @@ exports.new = function(req, res) {
 	var quiz = models.Quiz.build( // Crea un objeto quiz
 		{pregunta: "", respuesta: ""}
 	);
-	res.render('quizes/new', {quiz: quiz});
+	res.render('quizes/new', {quiz: quiz, errors: [] });
 };
 
 // POST /quizes/create
 exports.create = function(req, res) {
 	var quiz = models.Quiz.build(req.body.quiz);
-	// Guarda en BDD sólo campos pregunta y respuesta, evitando abusos:
-	quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-		res.redirect('/quizes');
-	})
+	
+	quiz
+	.validate().then(
+		function(err){
+			if (err) {
+				res.render('quizes/new', {quiz: quiz, errors: err.errors});
+			} else {
+				quiz
+				// Guarda en BDD sólo campos pregunta y respuesta, evitando abusos:
+				.save({fields: ["pregunta", "respuesta"]})
+				.then(function(){ res.redirect('/quizes');})
+			}
+		}
+	);
+	
 };
 
 // GET /author
