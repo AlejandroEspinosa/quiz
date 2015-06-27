@@ -38,10 +38,12 @@ sequelize.sync().then(function() { //cambiamos success por then al actualizar se
 	Quiz.count().then(function(count) {
 		if (count === 0) {
 			Quiz.create({ pregunta: 'Capital de Italia',
-						  respuesta: 'Roma'
+						  respuesta: 'Roma',
+						  tema: 'humanidades'
 			});
 			Quiz.create({ pregunta: 'Capital de Portugal',
-						  respuesta: 'Lisboa'
+						  respuesta: 'Lisboa',
+						  tema: 'humanidades'
 			})
 			.then(function() {console.log('Base de datos inicializada')});
 		};

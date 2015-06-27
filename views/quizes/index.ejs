@@ -1,5 +1,6 @@
 <table><% var i; for (i=0; i < quizes.length; i++) { %>          
           <tr>
+            <td><%= quizes[i].tema.replace(/\w+/, function(a){ return a.charAt(0).toUpperCase() + a.slice(1).toLowerCase(); }) // Primera letra en mayúsculas %>: </td>
             <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
             <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
             <td>

@@ -49,7 +49,7 @@ exports.answer = function(req, res) {
 // GET /quizes/new
 exports.new = function(req, res) {
 	var quiz = models.Quiz.build( // Crea un objeto quiz
-		{pregunta: "", respuesta: ""}
+		{pregunta: "", respuesta: "", tema: ""}
 	);
 	res.render('quizes/new', {quiz: quiz, errors: [] });
 };
@@ -65,7 +65,7 @@ exports.create = function(req, res) {
 			} else {
 				quiz
 				// Guarda en BDD sólo campos pregunta y respuesta, evitando abusos:
-				.save({fields: ["pregunta", "respuesta"]})
+				.save({fields: ["pregunta", "respuesta", "tema"]})
 				.then(function(){ res.redirect('/quizes');})
 			}
 		}
@@ -82,6 +82,8 @@ exports.edit = function(req, res) {
 exports.update = function(req, res) {
 	req.quiz.pregunta  = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
+	req.quiz.tema = req.body.quiz.tema;
+	console.log(req.quiz.tema);
 	req.quiz
 	.validate()
 	.then(
@@ -91,7 +93,7 @@ exports.update = function(req, res) {
 			} else {
 				req.quiz
 				// Guarda en BDD sólo campos pregunta y respuesta, evitando abusos:
-				.save({fields: ["pregunta", "respuesta"]})
+				.save({fields: ["pregunta", "respuesta", "tema"]})
 				.then(function(){ res.redirect('/quizes');})
 			}
 		}
