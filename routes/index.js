@@ -10,9 +10,9 @@ router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz', errors: [] });
 });
 
-// Autoload para rutas con parámetro :quizId
-// Precarga la pregunta con id=quizId
-router.param('quizId', quizController.load);
+// Autoload para rutas con parámetros
+router.param('quizId', quizController.load); // para rutas con parámetro :quizId
+router.param('commentId', commentController.load); // para rutas con parámetro :commentId
 
 // Rutas de session
 router.get('/login', 		sessionController.new);
@@ -31,6 +31,7 @@ router.delete('/quizes/:quizId(\\d+)', 		sessionController.loginRequired, quizCo
 
 router.get('/quizes/:quizId(\\d+)/comments/new', 	commentController.new);
 router.post('/quizes/:quizId(\\d+)/comments', 		commentController.create);
+router.put('/quizes/:quizId(\\d+)/comments/:commentId(\\d+)/publish', sessionController.loginRequired, commentController.publish);
 
 // Otras rutas
 router.get('/author', quizController.author);

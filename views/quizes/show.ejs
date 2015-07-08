@@ -5,5 +5,13 @@
           <input type="submit" value="Enviar" />
         </form>
         <p><a href="/quizes/<%= quiz.id %>/comments/new"><button>Añadir comentario</button></a></p>
-        <p><strong>Comentarios:</strong></p><% for (index in quiz.Comments){ %>
-        <p>- <%= quiz.Comments[index].texto %></p><% } %>
+
+        <p><strong>Comentarios:</strong></p>
+<% for (index in quiz.Comments){ %><% if (quiz.Comments[index].publicado || session.user) { %>
+        <span>- <%= quiz.Comments[index].texto %><% if (session.user && !quiz.Comments[index].publicado) { %>
+           <span class="inline">
+             <form method="post" action="/quizes/<%= quiz.id %>/comments/<%= quiz.Comments[index].id %>/publish?_method=put">
+               <button type="submit" onClick="return confirm('¿Seguro que quiere publicar el comentario?');">Publicar</button>
+             </form>
+           </span>
+        <% } %></span><br /><% } %><% } %>
