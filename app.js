@@ -36,6 +36,24 @@ app.use(function(req, res, next) {
 
     // Guarda session en local para poder recuperarlo en las vistas
     res.locals.session = req.session;
+
+    // SESSION TIMEOUT
+    // Si hay session.user comprueba que no haya trascurrido más de 2 min
+    // desde la petición anterior. En caso contrario destruye la sesión.
+    if (req.session.user) {
+        var ahora = new Date();
+        var hace_dos_minutos = new Date(ahora);
+        hace_dos_minutos.setMinutes(ahora.getMinutes() - 2);
+        var ultimo_acceso = new Date(req.session.last_request);
+        if (ultimo_acceso < hace_dos_minutos) {
+            console.log('Han pasado más de 2 minutos. Borrando Sesión.');
+            delete req.session.user;
+            req.session.destroy();
+        } else {
+            req.session.last_request = ahora.toJSON();
+        }
+    }
+
     next();
 });
 
