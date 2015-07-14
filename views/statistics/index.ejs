@@ -1,0 +1,10 @@
+<h2>Estadísticas</h2>
+          Preguntas: <%= num_quizes %><br />
+           <font size="-1">- Sin comentarios: <%= num_quizes - num_quizes_with_comments %><br />
+           - Con comentarios: <%= num_quizes_with_comments %></font><br />
+          Comentarios: <%= num_comments %><br />
+           <font size="-1">- Publicados: <%= num_comments - num_comments_not_published %><br />
+           - Sin publicar: <%= num_comments_not_published %></font><br />
+<% if(num_quizes>0) { %>
+          Número medio de comentarios por pregunta: <%= num_comments / num_quizes %><br />
+<% }; %>

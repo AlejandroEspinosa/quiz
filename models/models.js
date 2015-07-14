@@ -39,6 +39,10 @@ Quiz.hasMany(Comment);
 exports.Quiz = Quiz;
 exports.Comment = Comment;
 
+// Para luego poder hacer models.sequelize.query('SELECT ...
+// es decir, para poder construir consultas SQL raw
+exports.sequelize = sequelize;//exportamos BD para estadísticas.
+
 // sequelize.sync() sincroniza si existe o crea la tabla
 sequelize.sync().then(function() { //cambiamos success por then al actualizar sequelize
 	Quiz.count().then(function(count) {
